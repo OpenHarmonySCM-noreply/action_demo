@@ -1,0 +1,26 @@
+name: OpenHarmony gitee repos mirror periodic job
+on:
+  schedule:
+    # Runs at 23:00 UTC (7:00 AM Beijing) every day
+    - cron:  '0 23 * * *'
+  repository_dispatch:
+    types:
+      - humen_api_trigger
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Mirror the gitee/openharmony org repos to github/openharmony-gitee-mirror.
+      uses: OpenHarmonySCM-noreply/action_demo@master
+      with:
+        src: gitee/openharmony
+        dst: github/openharmony
+        dst_key: ${{ secrets.SYNC_EG_PRIVATE_KEY }}
+        dst_token:  ${{ secrets.SYNC_EG_TOKEN }}
+        #static_list: 'installer'
+        account_type: org
+        clone_style: ssh
+        force_update: true
+        timeout: 2h
